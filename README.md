@@ -1,4 +1,4 @@
-# routing-controllers with express demo
+# typescript back
 
 1. Install all dependencies:
 
@@ -7,8 +7,3 @@
 2. Run the project:
 
     `npm start`
-
-### Using with older versions of node
-
-This project targets ES6. 
-You can target ES5, but you'll need to use es6-shim and install its typings.
