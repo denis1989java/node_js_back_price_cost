@@ -1,14 +1,16 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './User';
 import { Address } from './Address';
+import { Currency } from './Currency';
 
 @Entity()
 export class UserInfo {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    currency: string;
+    @OneToOne(() => Currency)
+    @JoinColumn()
+    currency: Currency;
 
     @Column()
     birthDate: Date;
@@ -22,10 +24,11 @@ export class UserInfo {
     @Column()
     phone: string;
 
-    @OneToOne(type => User, user => user.userInfo)
+    @OneToOne(() => User, user => user.userInfo)
+    @JoinColumn()
     user: User;
 
-    @OneToOne(type => Address, address => address.userInfo, {
+    @OneToOne(() => Address, address => address.userInfo, {
         cascade: true,
     })
     @JoinColumn()

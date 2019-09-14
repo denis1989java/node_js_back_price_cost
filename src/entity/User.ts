@@ -1,7 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInfo } from './UserInfo';
 import { IsEmail } from 'class-validator';
 import { UserStatus } from './UserStatus';
+import { Dish } from './Dish';
+import { Purchase } from './Purchase';
 
 @Entity()
 export class User {
@@ -18,7 +20,17 @@ export class User {
     @Column()
     status: UserStatus;
 
-    @OneToOne(type => UserInfo, userInfo => userInfo.user)
+    @OneToOne(() => UserInfo, userInfo => userInfo.user, {
+        cascade: true,
+    })
     @JoinColumn()
     userInfo: UserInfo;
+
+    @OneToMany(() => Dish, dish => dish.user)
+    @JoinColumn()
+    dishes: Dish[];
+
+    @OneToMany(() => Purchase, purchase => purchase.user)
+    @JoinColumn()
+    purchases: Purchase[];
 }

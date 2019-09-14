@@ -13,12 +13,14 @@ import { UserInfoUpdateDTO } from '../dto/UserInfoUpdateDTO';
 import UpdateResultUtil from '../util/UpdateResultUtil';
 import { UserInfoResponseDTO } from '../dto/UserInfoResponseDTO';
 import { injectable } from 'inversify';
+import { CurrencyRepository } from '../repository/CurrencyRepository';
 
 @injectable()
 export default class UserInfoService {
     constructor(
         @InjectRepository(UserInfoRepository) private readonly userInfoRepository: UserInfoRepository,
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
+        @InjectRepository(CurrencyRepository) private readonly currencyRepository: CurrencyRepository,
     ) {}
 
     async findOne(id: number): Promise<UserInfoResponseDTO> {
@@ -43,7 +45,7 @@ export default class UserInfoService {
         address.zip = request.zip;
 
         let userInfo: UserInfo = new UserInfo();
-        userInfo.currency = request.currency;
+        userInfo.currency = await this.currencyRepository.findOne(request.currency);
         userInfo.name = request.name;
         userInfo.surname = request.surname;
         userInfo.birthDate = new Date(request.birthDate);

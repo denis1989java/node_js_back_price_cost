@@ -39,6 +39,12 @@ module.exports = {
             "rules": {
                 "@typescript-eslint/no-var-requires": "off"
             }
+        },
+        {
+            "files": ["CommonRequest.ts"],
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off"
+            }
         }
     ]
 };

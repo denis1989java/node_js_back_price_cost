@@ -1,25 +1,24 @@
-import {User} from '../entity/User';
-import {InjectRepository} from 'typeorm-typedi-extensions';
-import {UserRepository} from '../repository/UserRepository';
-import {UserStatus} from '../entity/UserStatus';
-import {Messages} from '../util/Messages';
-import {fromUserToUserResponseDTO} from '../mapper/UserMapper';
-import {UserResponseDTO} from '../dto/UserResponseDTO';
-import {ForbiddenError} from 'routing-controllers';
+import { User } from '../entity/User';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserRepository } from '../repository/UserRepository';
+import { UserStatus } from '../entity/UserStatus';
+import { Messages } from '../util/Messages';
+import { fromUserToUserResponseDTO } from '../mapper/UserMapper';
+import { UserResponseDTO } from '../dto/UserResponseDTO';
+import { ForbiddenError } from 'routing-controllers';
 import PasswordUtil from '../util/PasswordUtil';
 import TokenUtil from '../util/TokenUtil';
-import {UserCreateDTO} from '../dto/UserCreateDTO';
-import {DeleteResult} from 'typeorm';
-import {CredentialDTO} from '../dto/CredentialDTO';
-import {injectable} from 'inversify';
+import { UserCreateDTO } from '../dto/UserCreateDTO';
+import { DeleteResult } from 'typeorm';
+import { CredentialDTO } from '../dto/CredentialDTO';
+import { injectable } from 'inversify';
 import 'reflect-metadata';
 
 const bcrypt = require('bcrypt');
 
 @injectable()
 export default class UserService {
-    constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {
-    }
+    constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {}
 
     public async findOne(id: number): Promise<UserResponseDTO> {
         const user: User = await this.userRepository.findOne(id);
@@ -57,6 +56,6 @@ export default class UserService {
 
         const token = await TokenUtil.create(persistUser.email);
 
-        return {token: token, email: persistUser.email};
+        return { token: token, email: persistUser.email };
     }
 }

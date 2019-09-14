@@ -18,6 +18,6 @@ export class Address {
     @Column()
     zip: string;
 
-    @OneToOne(type => UserInfo, userInfo => userInfo.address)
+    @OneToOne(() => UserInfo, userInfo => userInfo.address)
     userInfo: UserInfo;
 }

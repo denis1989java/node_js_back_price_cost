@@ -1,4 +1,4 @@
-import { Authorized, Delete, Get, JsonController, Param } from 'routing-controllers';
+import { Delete, Get, JsonController, Param } from 'routing-controllers';
 import { Service } from 'typedi';
 import UserService from '../service/UserService';
 import { DeleteResult } from 'typeorm';
@@ -11,7 +11,6 @@ import 'reflect-metadata';
 @JsonController()
 export class UserController {
     constructor(@inject(TYPES.UserService) private readonly userService: UserService) {}
-
 
     @Get('/users/:id')
     findOne(@Param('id') id: number): Promise<UserResponseDTO> {
