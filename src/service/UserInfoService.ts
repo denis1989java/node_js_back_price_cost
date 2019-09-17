@@ -14,6 +14,7 @@ import UpdateResultUtil from '../util/UpdateResultUtil';
 import {UserInfoResponseDTO} from '../dto/UserInfoResponseDTO';
 import {injectable} from 'inversify';
 import {CurrencyRepository} from '../repository/CurrencyRepository';
+import {PriceCostException} from "../error/PriceCostException";
 
 @injectable()
 export default class UserInfoService {
@@ -33,10 +34,10 @@ export default class UserInfoService {
         let user: User = await this.userRepository.findOne(currentUser.id);
 
         if (!user) {
-            throw new ForbiddenError(Messages.USER_NOT_EXIST);
+            throw new PriceCostException(500, Messages.USER_NOT_EXIST);
         }
         if (user.status !== UserStatus.REGISTERED) {
-            throw new ForbiddenError(Messages.WRONG_USER_STATUS);
+            throw new PriceCostException(500, Messages.WRONG_USER_STATUS);
         }
 
         const address: Address = new Address();
@@ -67,16 +68,16 @@ export default class UserInfoService {
         const userInfo: UserInfo = await this.userInfoRepository.findOne(request.id);
         const user: User = userInfo.user;
         if (!userInfo) {
-            throw new ForbiddenError(Messages.USER_INFO_NOT_EXIST);
+            throw new PriceCostException(500, Messages.USER_INFO_NOT_EXIST);
         }
         if (!user) {
-            throw new ForbiddenError(Messages.USER_NOT_EXIST);
+            throw new PriceCostException(500, Messages.USER_NOT_EXIST);
         }
         if (user.status !== UserStatus.PROFILE_FULLFILLED) {
-            throw new ForbiddenError(Messages.WRONG_USER_STATUS);
+            throw new PriceCostException(500, Messages.WRONG_USER_STATUS);
         }
         if (!userInfo.address) {
-            throw new ForbiddenError(Messages.ADDRESS_NOT_EXIST);
+            throw new PriceCostException(500, Messages.ADDRESS_NOT_EXIST);
         }
 
         userInfo.name = request.name;
@@ -91,7 +92,7 @@ export default class UserInfoService {
         const updateResult = await this.userInfoRepository.update(userInfo);
         if (!UpdateResultUtil.isSuccess(updateResult)) {
             // todo DM write custom application Exception
-            throw new ForbiddenError(Messages.WRONG_USER_INFO);
+            throw new PriceCostException(500, Messages.WRONG_USER_INFO);
         }
 
         return fromUserInfoToUserInfoResponseDTO(userInfo);

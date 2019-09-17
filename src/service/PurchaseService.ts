@@ -16,6 +16,7 @@ import {Measuring} from '../entity/Measuring';
 import {CurrencyRepository} from '../repository/CurrencyRepository';
 import {PurchaseUpdateDTO} from "../dto/PurchaseUpdateDTO";
 import UpdateResultUtil from "../util/UpdateResultUtil";
+import {PriceCostException} from "../error/PriceCostException";
 
 @injectable()
 export default class PurchaseService {
@@ -29,7 +30,7 @@ export default class PurchaseService {
     async find(userId: number): Promise<PurchaseResponseDTO[]> {
         const user: User = await this.userRepository.findOne(userId);
         if (!user) {
-            throw new ForbiddenError(Messages.USER_NOT_EXIST);
+            throw new PriceCostException(500, Messages.USER_NOT_EXIST);
         }
         const purchases: Purchase[] = await this.purchaseRepository.find(user);
         return purchases.map(purchase => fromPurchaseToPurchaseResponseDTO(purchase));
@@ -57,7 +58,7 @@ export default class PurchaseService {
         const updateResult = await this.purchaseRepository.update(purchase);
         if (!UpdateResultUtil.isSuccess(updateResult)) {
             // todo DM write custom application Exception
-            throw new ForbiddenError(Messages.WRONG_PURCHASE);
+            throw new PriceCostException(500, Messages.WRONG_PURCHASE);
         }
 
         return fromPurchaseToPurchaseResponseDTO(purchase);
