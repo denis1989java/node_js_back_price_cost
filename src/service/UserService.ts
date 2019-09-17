@@ -56,6 +56,6 @@ export default class UserService {
 
         const token = await TokenUtil.create(persistUser.email);
 
-        return { token: token, email: persistUser.email };
+        return new CredentialDTO(token, persistUser);
     }
 }

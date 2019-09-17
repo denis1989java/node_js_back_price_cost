@@ -25,6 +25,6 @@ export default class AuthenticationService {
 
         const token = await TokenUtil.create(persistUser.email);
 
-        return { token: token, email: persistUser.email };
+        return new CredentialDTO(token, persistUser);
     }
 }

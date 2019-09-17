@@ -13,7 +13,9 @@ import DateUtil from './util/DateUtil';
 import { TokenValidationDTO } from './dto/TokenValidationDTO';
 import { Currency } from './entity/Currency';
 import CommonRequest from './repository/CommonRequest';
-import { CurrencyRatesResponseDTO } from './dto/CurrencyRatesResponseDTO';
+import { CurrencyRatesRequestDTO } from './dto/CurrencyRatesRequestDTO';
+import { CurrencyController } from './controllers/CurrencyController';
+import { PurchaseController } from './controllers/PurchaseController';
 
 require('dotenv').config();
 const cron = require('node-cron');
@@ -37,7 +39,14 @@ const app = express();
 app.use(session({ secret: process.env.LOGIN_SECRET, saveUninitialized: true }));
 
 useExpressServer(app, {
-    controllers: [UserController, UserInfoController, LoginController, RegistrationController],
+    controllers: [
+        UserController,
+        UserInfoController,
+        LoginController,
+        RegistrationController,
+        CurrencyController,
+        PurchaseController,
+    ],
     authorizationChecker: async (action: Action) => {
         const token = action.request.headers['authorization'];
         const secret = action.request.headers['secret'];
@@ -51,6 +60,9 @@ useExpressServer(app, {
             sessionUser.email === result.user &&
             (await DateUtil.isDateExpired(new Date(result.exp)))
         );
+    },
+    currentUserChecker: async (action: Action) => {
+        return action.request.session.user;
     },
 });
 
@@ -71,7 +83,7 @@ const updateCurrencies = cron.schedule(
     '1 * * * * *',
     async () => {
         logger.info('Currencies updating started');
-        const currencyRatesResponseDTO: CurrencyRatesResponseDTO = await CommonRequest.get(
+        const currencyRatesResponseDTO: CurrencyRatesRequestDTO = await CommonRequest.get(
             process.env.CURRENCIES_RATES_URL,
         );
         const currencyRepository = await getConnection().getRepository(Currency);

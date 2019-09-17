@@ -1,8 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class UserInfoCreateDTO {
-    @IsNotEmpty()
-    userId: number;
 
     @IsNotEmpty()
     currency: string;

@@ -1,4 +1,4 @@
-export class CurrencyRatesResponseDTO {
+export class CurrencyRatesRequestDTO {
     disclaimer: string;
 
     license: string;

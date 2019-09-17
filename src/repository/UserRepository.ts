@@ -6,7 +6,7 @@ import { Service } from 'typedi';
 @EntityRepository(User)
 export class UserRepository extends AbstractRepository<User> {
     findOne(id: number): Promise<User> {
-        return this.repository.findOne(id, { relations: ['userInfo', 'userInfo.address'] });
+        return this.repository.findOne(id, { relations: ['userInfo', 'userInfo.address', 'userInfo.currency'] });
     }
 
     save(user: User): Promise<User> {

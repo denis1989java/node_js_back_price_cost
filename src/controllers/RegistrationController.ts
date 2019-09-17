@@ -12,7 +12,7 @@ export class RegistrationController {
     constructor(@inject(TYPES.UserService) private readonly userService: UserService) {}
 
     @Post('/registration')
-    async login(@Body() request: UserCreateDTO): Promise<UserResponseDTO> {
+    async registration(@Body() request: UserCreateDTO): Promise<UserResponseDTO> {
         return this.userService.save(request);
     }
 }

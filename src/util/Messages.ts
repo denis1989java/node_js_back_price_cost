@@ -7,4 +7,5 @@ export enum Messages {
     USER_INFO_NOT_EXIST = "User Information doesn't exist",
     ADDRESS_NOT_EXIST = 'Address not exist',
     WRONG_USER_INFO = 'Wrong user info',
+    WRONG_PURCHASE = 'Wrong purchase',
 }

@@ -10,8 +10,8 @@ export class Purchase {
     @Column()
     name: string;
 
-    @Column()
-    price: string;
+    @Column('decimal', { precision: 65, scale: 14, nullable: true })
+    price: number;
 
     @Column()
     measuring: Measuring;
