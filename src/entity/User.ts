@@ -26,11 +26,15 @@ export class User {
     @JoinColumn()
     userInfo: UserInfo;
 
-    @OneToMany(() => Dish, dish => dish.user)
+    @OneToMany(() => Dish, dish => dish.user, {
+        cascade: true,
+    })
     @JoinColumn()
     dishes: Dish[];
 
-    @OneToMany(() => Purchase, purchase => purchase.user)
+    @OneToMany(() => Purchase, purchase => purchase.user, {
+        cascade: true,
+    })
     @JoinColumn()
     purchases: Purchase[];
 }

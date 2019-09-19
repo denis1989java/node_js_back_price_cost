@@ -1,6 +1,6 @@
 export enum Measuring {
-    KG,
-    G,
-    L,
-    ML,
+    KG = 'Kilogram',
+    G = 'Gram',
+    L = 'Liter',
+    ML = 'Milliliter',
 }

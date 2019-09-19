@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './User';
-import { Ingredient } from './Ingredient';
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {User} from './User';
+import {Ingredient} from './Ingredient';
 
 @Entity()
 export class Dish {
@@ -10,12 +10,13 @@ export class Dish {
     @Column()
     name: string;
 
-    @Column()
-    amount: string;
+    @Column('decimal', {precision: 65, scale: 14, nullable: true, default: 0})
+    amount: number;
 
     @ManyToOne(() => User, user => user.dishes)
     user: User;
 
-    @OneToMany(() => Ingredient, ingredient => ingredient.dish)
+    @OneToMany(() => Ingredient, ingredient => ingredient.dish, {onDelete: 'CASCADE'})
+    @JoinColumn()
     ingredients: Ingredient[];
 }

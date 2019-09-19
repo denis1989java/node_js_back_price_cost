@@ -1,9 +1,26 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { Purchase } from './Purchase';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Dish } from './Dish';
+import { Measuring } from './Measuring';
 
 @Entity()
-export class Ingredient extends Purchase {
+export class Ingredient {
+    constructor(name: string, measuring: Measuring) {
+        this.name = name;
+        this.measuring = measuring;
+    }
+
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+
+    @Column('decimal', { precision: 65, scale: 14, nullable: true })
+    price: number;
+
+    @Column()
+    measuring: Measuring;
+
     @Column()
     quantity: number;
 

@@ -1,22 +1,21 @@
-import {InjectRepository} from 'typeorm-typedi-extensions';
-import {injectable} from 'inversify';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { injectable } from 'inversify';
 import 'reflect-metadata';
-import {PurchaseRepository} from '../repository/PurchaseRepository';
-import {User} from '../entity/User';
-import {Purchase} from '../entity/Purchase';
-import {DeleteResult} from 'typeorm';
-import {UserRepository} from '../repository/UserRepository';
-import {ForbiddenError} from 'routing-controllers';
-import {Messages} from '../util/Messages';
-import {PurchaseResponseDTO} from '../dto/PurchaseResponseDTO';
-import {fromPurchaseToPurchaseResponseDTO} from '../mapper/PurchaseMapper';
-import {PurchaseCreateDTO} from '../dto/PurchaseCreateDTO';
-import {Currency} from '../entity/Currency';
-import {Measuring} from '../entity/Measuring';
-import {CurrencyRepository} from '../repository/CurrencyRepository';
-import {PurchaseUpdateDTO} from "../dto/PurchaseUpdateDTO";
-import UpdateResultUtil from "../util/UpdateResultUtil";
-import {PriceCostException} from "../error/PriceCostException";
+import { PurchaseRepository } from '../repository/PurchaseRepository';
+import { User } from '../entity/User';
+import { Purchase } from '../entity/Purchase';
+import { DeleteResult } from 'typeorm';
+import { UserRepository } from '../repository/UserRepository';
+import { Messages } from '../util/Messages';
+import { PurchaseResponseDTO } from '../dto/PurchaseResponseDTO';
+import { fromPurchaseToPurchaseResponseDTO } from '../mapper/PurchaseMapper';
+import { PurchaseCreateDTO } from '../dto/PurchaseCreateDTO';
+import { Currency } from '../entity/Currency';
+import { Measuring } from '../entity/Measuring';
+import { CurrencyRepository } from '../repository/CurrencyRepository';
+import { PurchaseUpdateDTO } from '../dto/PurchaseUpdateDTO';
+import UpdateResultUtil from '../util/UpdateResultUtil';
+import { PriceCostException } from '../error/PriceCostException';
 
 @injectable()
 export default class PurchaseService {
@@ -24,8 +23,7 @@ export default class PurchaseService {
         @InjectRepository(PurchaseRepository) private readonly purchaseRepository: PurchaseRepository,
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
         @InjectRepository(CurrencyRepository) private readonly currencyRepository: CurrencyRepository,
-    ) {
-    }
+    ) {}
 
     async find(userId: number): Promise<PurchaseResponseDTO[]> {
         const user: User = await this.userRepository.findOne(userId);
@@ -42,7 +40,6 @@ export default class PurchaseService {
     }
 
     async save(request: PurchaseCreateDTO, currentUser: User): Promise<PurchaseResponseDTO> {
-
         let purchase: Purchase = await this.getPurchaseData(request, currentUser);
 
         purchase = await this.purchaseRepository.save(purchase);
@@ -51,13 +48,11 @@ export default class PurchaseService {
     }
 
     async update(request: PurchaseUpdateDTO, currentUser: User): Promise<PurchaseResponseDTO> {
-
-        let purchase: Purchase = await this.getPurchaseData(request, currentUser);
+        const purchase: Purchase = await this.getPurchaseData(request, currentUser);
         purchase.id = request.id;
 
         const updateResult = await this.purchaseRepository.update(purchase);
         if (!UpdateResultUtil.isSuccess(updateResult)) {
-            // todo DM write custom application Exception
             throw new PriceCostException(500, Messages.WRONG_PURCHASE);
         }
 
@@ -70,13 +65,16 @@ export default class PurchaseService {
 
     private async getPurchaseData(request: PurchaseCreateDTO, currentUser: User): Promise<Purchase> {
         currentUser = await this.userRepository.findOne(currentUser.id);
+        if (!currentUser) {
+            throw new PriceCostException(500, Messages.USER_NOT_EXIST);
+        }
         const baseCurrency: Currency = currentUser.userInfo.currency;
         const chooseCurrency: Currency = await this.currencyRepository.findOne(request.currency);
         const quantity: number = this.getPurchaseQuantity(request.quantity, request.measuring);
         const measuring: Measuring = this.getPurchaseMeasuring(request.measuring);
         const price: number = this.getPurchasePrice(request.price, baseCurrency, chooseCurrency, quantity);
 
-        let purchase: Purchase = new Purchase();
+        const purchase: Purchase = new Purchase();
         purchase.name = request.name;
         purchase.measuring = measuring;
         purchase.price = price;
@@ -113,19 +111,12 @@ export default class PurchaseService {
         chooseCurrency: Currency,
         quantity: number,
     ): number {
-        console.log(price, 1);
-        console.log(baseCurrency);
-        console.log(chooseCurrency);
-        console.log(quantity);
         price = price / quantity;
-        console.log(price, 2);
         if (chooseCurrency.code === 'USD') {
             price = price * baseCurrency.rate;
-            console.log(price, 3);
         }
         if (chooseCurrency.code !== 'USD' && chooseCurrency !== baseCurrency) {
             price = (price / chooseCurrency.rate) * baseCurrency.rate;
-            console.log(price, 4);
         }
         return price;
     }

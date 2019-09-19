@@ -1,19 +1,19 @@
-import {Body, CurrentUser, Get, JsonController, Param, Post, Put} from 'routing-controllers';
-import {Service} from 'typedi';
-import {inject} from 'inversify';
-import {TYPES} from '../../types';
+import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
+import { Service } from 'typedi';
+import { inject } from 'inversify';
+import { TYPES } from '../../types';
 import 'reflect-metadata';
 import PurchaseService from '../service/PurchaseService';
-import {PurchaseResponseDTO} from '../dto/PurchaseResponseDTO';
-import {PurchaseCreateDTO} from '../dto/PurchaseCreateDTO';
-import {User} from '../entity/User';
-import {PurchaseUpdateDTO} from "../dto/PurchaseUpdateDTO";
+import { PurchaseResponseDTO } from '../dto/PurchaseResponseDTO';
+import { PurchaseCreateDTO } from '../dto/PurchaseCreateDTO';
+import { User } from '../entity/User';
+import { PurchaseUpdateDTO } from '../dto/PurchaseUpdateDTO';
+import { DeleteResult } from 'typeorm';
 
 @Service()
 @JsonController()
 export class PurchaseController {
-    constructor(@inject(TYPES.PurchaseService) private readonly purchaseService: PurchaseService) {
-    }
+    constructor(@inject(TYPES.PurchaseService) private readonly purchaseService: PurchaseService) {}
 
     @Get('/purchases/:userId')
     find(@Param('userId') userId: number): Promise<PurchaseResponseDTO[]> {
@@ -33,5 +33,10 @@ export class PurchaseController {
     @Put('/purchases')
     update(@Body() request: PurchaseUpdateDTO, @CurrentUser() user: User): Promise<PurchaseResponseDTO> {
         return this.purchaseService.update(request, user);
+    }
+
+    @Delete('/purchases/:id')
+    delete(@Param('id') id: number): Promise<DeleteResult> {
+        return this.purchaseService.delete(id);
     }
 }

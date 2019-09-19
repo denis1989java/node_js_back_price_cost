@@ -1,20 +1,19 @@
-import {InjectRepository} from 'typeorm-typedi-extensions';
-import {UserInfoRepository} from '../repository/UserInfoRepository';
-import {UserInfo} from '../entity/UserInfo';
-import {User} from '../entity/User';
-import {UserRepository} from '../repository/UserRepository';
-import {UserInfoCreateDTO} from '../dto/UserInfoCreateDTO';
-import {ForbiddenError} from 'routing-controllers';
-import {Messages} from '../util/Messages';
-import {Address} from '../entity/Address';
-import {UserStatus} from '../entity/UserStatus';
-import {fromUserInfoToUserInfoResponseDTO} from '../mapper/UserInfoMapper';
-import {UserInfoUpdateDTO} from '../dto/UserInfoUpdateDTO';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserInfoRepository } from '../repository/UserInfoRepository';
+import { UserInfo } from '../entity/UserInfo';
+import { User } from '../entity/User';
+import { UserRepository } from '../repository/UserRepository';
+import { UserInfoCreateDTO } from '../dto/UserInfoCreateDTO';
+import { Messages } from '../util/Messages';
+import { Address } from '../entity/Address';
+import { UserStatus } from '../entity/UserStatus';
+import { fromUserInfoToUserInfoResponseDTO } from '../mapper/UserInfoMapper';
+import { UserInfoUpdateDTO } from '../dto/UserInfoUpdateDTO';
 import UpdateResultUtil from '../util/UpdateResultUtil';
-import {UserInfoResponseDTO} from '../dto/UserInfoResponseDTO';
-import {injectable} from 'inversify';
-import {CurrencyRepository} from '../repository/CurrencyRepository';
-import {PriceCostException} from "../error/PriceCostException";
+import { UserInfoResponseDTO } from '../dto/UserInfoResponseDTO';
+import { injectable } from 'inversify';
+import { CurrencyRepository } from '../repository/CurrencyRepository';
+import { PriceCostException } from '../error/PriceCostException';
 
 @injectable()
 export default class UserInfoService {
@@ -22,8 +21,7 @@ export default class UserInfoService {
         @InjectRepository(UserInfoRepository) private readonly userInfoRepository: UserInfoRepository,
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
         @InjectRepository(CurrencyRepository) private readonly currencyRepository: CurrencyRepository,
-    ) {
-    }
+    ) {}
 
     async findOne(id: number): Promise<UserInfoResponseDTO> {
         const userInfo = await this.userInfoRepository.findOne(id);
