@@ -1,21 +1,21 @@
-import {InjectRepository} from 'typeorm-typedi-extensions';
-import {injectable} from 'inversify';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { injectable } from 'inversify';
 import 'reflect-metadata';
-import {DishRepository} from '../repository/DishRepository';
-import {UserRepository} from '../repository/UserRepository';
-import {DeleteResult} from 'typeorm';
-import {IngredientRepository} from '../repository/IngredientRepository';
-import {IngredientRequestDTO} from '../dto/IngredientRequestDTO';
-import {IngredientResponseDTO} from '../dto/IngredientResponseDTO';
-import {Purchase} from '../entity/Purchase';
-import {PurchaseRepository} from '../repository/PurchaseRepository';
-import {PriceCostException} from '../error/PriceCostException';
-import {Messages} from '../util/Messages';
-import {Ingredient} from '../entity/Ingredient';
-import {Measuring} from '../entity/Measuring';
-import {Dish} from '../entity/Dish';
-import {fromIngredientToIngredientResponseDTO} from '../mapper/IngredientMapper';
-import UpdateResultUtil from "../util/UpdateResultUtil";
+import { DishRepository } from '../repository/DishRepository';
+import { UserRepository } from '../repository/UserRepository';
+import { DeleteResult } from 'typeorm';
+import { IngredientRepository } from '../repository/IngredientRepository';
+import { IngredientRequestDTO } from '../dto/IngredientRequestDTO';
+import { IngredientResponseDTO } from '../dto/IngredientResponseDTO';
+import { Purchase } from '../entity/Purchase';
+import { PurchaseRepository } from '../repository/PurchaseRepository';
+import { PriceCostException } from '../error/PriceCostException';
+import { Messages } from '../util/Messages';
+import { Ingredient } from '../entity/Ingredient';
+import { Measuring } from '../entity/Measuring';
+import { Dish } from '../entity/Dish';
+import { fromIngredientToIngredientResponseDTO } from '../mapper/IngredientMapper';
+import UpdateResultUtil from '../util/UpdateResultUtil';
 
 @injectable()
 export default class IngredientService {
@@ -24,13 +24,16 @@ export default class IngredientService {
         @InjectRepository(DishRepository) private readonly dishRepository: DishRepository,
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
         @InjectRepository(PurchaseRepository) private readonly purchaseRepository: PurchaseRepository,
-    ) {
-    }
+    ) {}
 
     public async save(request: IngredientRequestDTO): Promise<IngredientResponseDTO> {
         let dish: Dish = await this.getAndValidateDish(request.dishId);
 
-        let ingredient: Ingredient = await this.fillIngredientData(new Ingredient(request.name, request.measuring), request, dish);
+        let ingredient: Ingredient = await this.fillIngredientData(
+            new Ingredient(request.name, request.measuring),
+            request,
+            dish,
+        );
 
         ingredient = await this.ingredientRepository.save(ingredient);
 
@@ -49,7 +52,7 @@ export default class IngredientService {
 
         ingredient = await this.fillIngredientData(new Ingredient(request.name, request.measuring), request, dish);
 
-        let updateResult = await this.ingredientRepository.update(ingredient);
+        const updateResult = await this.ingredientRepository.update(ingredient);
         if (!UpdateResultUtil.isSuccess(updateResult)) {
             throw new PriceCostException(500, Messages.WRONG_INGREDIENT);
         }
@@ -63,8 +66,8 @@ export default class IngredientService {
         return this.ingredientRepository.delete(id);
     }
 
-    private async getAndValidateDish(dishId: number) {
-        let dish: Dish = await this.dishRepository.findOne(dishId);
+    private async getAndValidateDish(dishId: number): Promise<Dish> {
+        const dish: Dish = await this.dishRepository.findOne(dishId);
         if (!dish) {
             throw new PriceCostException(500, Messages.WRONG_DISH);
         }
@@ -81,7 +84,6 @@ export default class IngredientService {
     }
 
     private async updateDish(dishId: number): Promise<Dish> {
-
         let dish = await this.dishRepository.findOne(dishId);
 
         dish.amount = await this.getDishAmount(dish.ingredients);
@@ -98,7 +100,11 @@ export default class IngredientService {
         return ingredientResponseDTO;
     }
 
-    private async fillIngredientData(ingredient: Ingredient, request: IngredientRequestDTO, dish: Dish) {
+    private async fillIngredientData(
+        ingredient: Ingredient,
+        request: IngredientRequestDTO,
+        dish: Dish,
+    ): Promise<Ingredient> {
         ingredient.quantity = request.quantity;
         ingredient.price = await this.getIngredientPrice(request.measuring, request.quantity, request.purchaseId);
         ingredient.dish = dish;
@@ -116,5 +122,4 @@ export default class IngredientService {
         }
         return price;
     }
-
 }

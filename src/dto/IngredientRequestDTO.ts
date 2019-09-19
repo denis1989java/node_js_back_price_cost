@@ -1,7 +1,6 @@
-import {Measuring} from '../entity/Measuring';
+import { Measuring } from '../entity/Measuring';
 
 export class IngredientRequestDTO {
-
     id: number;
 
     dishId: number;
@@ -13,5 +12,4 @@ export class IngredientRequestDTO {
     measuring: Measuring;
 
     name: string;
-
 }

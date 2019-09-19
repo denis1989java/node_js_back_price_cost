@@ -11,7 +11,6 @@ import { PriceCostException } from '../error/PriceCostException';
 import { Dish } from '../entity/Dish';
 import { fromDishToDishResponseDTO } from '../mapper/DishMapper';
 import { DishUpdateDTO } from '../dto/DishUpdateDTO';
-import UpdateResultUtil from '../util/UpdateResultUtil';
 import { DeleteResult } from 'typeorm';
 
 @injectable()
@@ -46,7 +45,7 @@ export default class DishService {
 
         dish = await this.dishRepository.save(dish);
 
-       /* const updateResult = await await this.dishRepository.update(dish);
+        /* const updateResult = await await this.dishRepository.update(dish);
         if (!UpdateResultUtil.isSuccess(updateResult)) {
             throw new PriceCostException(500, Messages.WRONG_DISH);
         }*/

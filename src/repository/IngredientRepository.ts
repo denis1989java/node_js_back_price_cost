@@ -1,6 +1,6 @@
-import {AbstractRepository, DeleteResult, EntityRepository, UpdateResult} from 'typeorm';
-import {Service} from 'typedi';
-import {Ingredient} from '../entity/Ingredient';
+import { AbstractRepository, DeleteResult, EntityRepository, UpdateResult } from 'typeorm';
+import { Service } from 'typedi';
+import { Ingredient } from '../entity/Ingredient';
 
 @Service()
 @EntityRepository(Ingredient)

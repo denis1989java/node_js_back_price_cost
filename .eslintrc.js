@@ -35,6 +35,13 @@ module.exports = {
     },
     "overrides": [
         {
+            "files": ["MeasuringController.ts"],
+            "rules": {
+                "@typescript-eslint/consistent-type-assertions": "off",
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        },
+        {
             "files": ["*.ts"],
             "rules": {
                 "@typescript-eslint/no-var-requires": "off"

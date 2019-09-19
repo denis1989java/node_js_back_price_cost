@@ -1,24 +1,24 @@
 import 'reflect-metadata';
-import {Action, useContainer as routingUseContainer, useExpressServer} from 'routing-controllers';
-import {Container} from 'typedi';
-import {createConnection, getConnection, useContainer as ormUseContainer} from 'typeorm';
-import {UserController} from './controllers/UserController';
-import {UserInfoController} from './controllers/UserInfoController';
-import {LoginController} from './controllers/LoginController';
-import {RegistrationController} from './controllers/RegistrationController';
+import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers';
+import { Container } from 'typedi';
+import { createConnection, getConnection, useContainer as ormUseContainer } from 'typeorm';
+import { UserController } from './controllers/UserController';
+import { UserInfoController } from './controllers/UserInfoController';
+import { LoginController } from './controllers/LoginController';
+import { RegistrationController } from './controllers/RegistrationController';
 import * as express from 'express';
 import * as session from 'express-session';
 import TokenUtil from './util/TokenUtil';
 import DateUtil from './util/DateUtil';
-import {TokenValidationDTO} from './dto/TokenValidationDTO';
-import {Currency} from './entity/Currency';
+import { TokenValidationDTO } from './dto/TokenValidationDTO';
+import { Currency } from './entity/Currency';
 import CommonRequest from './repository/CommonRequest';
-import {CurrencyRatesRequestDTO} from './dto/CurrencyRatesRequestDTO';
-import {CurrencyController} from './controllers/CurrencyController';
-import {PurchaseController} from './controllers/PurchaseController';
-import {MeasuringController} from "./controllers/MeasuringController";
-import {DishController} from "./controllers/DishController";
-import {IngredientController} from "./controllers/IngredientController";
+import { CurrencyRatesRequestDTO } from './dto/CurrencyRatesRequestDTO';
+import { CurrencyController } from './controllers/CurrencyController';
+import { PurchaseController } from './controllers/PurchaseController';
+import { MeasuringController } from './controllers/MeasuringController';
+import { DishController } from './controllers/DishController';
+import { IngredientController } from './controllers/IngredientController';
 
 require('dotenv').config();
 const cron = require('node-cron');
@@ -28,8 +28,8 @@ const logger = winston.createLogger({
     format: winston.format.json(),
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({filename: 'error.log', level: 'error'}),
-        new winston.transports.File({filename: 'combined.log', level: 'info'}),
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log', level: 'info' }),
     ],
 });
 
@@ -39,7 +39,7 @@ createConnection();
 
 const app = express();
 
-app.use(session({secret: process.env.LOGIN_SECRET, saveUninitialized: true}));
+app.use(session({ secret: process.env.LOGIN_SECRET, saveUninitialized: true }));
 
 useExpressServer(app, {
     controllers: [
@@ -51,7 +51,7 @@ useExpressServer(app, {
         PurchaseController,
         MeasuringController,
         DishController,
-        IngredientController
+        IngredientController,
     ],
     authorizationChecker: async (action: Action) => {
         const token = action.request.headers['authorization'];
@@ -105,7 +105,7 @@ const updateCurrencies = cron.schedule(
     },
 );
 
-module.exports = app.listen(3000, async function () {
+module.exports = app.listen(3000, async function() {
     logger.info('Server started');
     await initializeCurrencies();
     await updateCurrencies.start();

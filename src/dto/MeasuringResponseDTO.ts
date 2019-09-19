@@ -1,5 +1,4 @@
 export class MeasuringResponseDTO {
-
     constructor(index: number, measuring: string, text: string) {
         this.index = index;
         this.measuring = measuring;
@@ -11,5 +10,4 @@ export class MeasuringResponseDTO {
     measuring: string;
 
     text: string;
-
 }

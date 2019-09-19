@@ -9,7 +9,11 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "lib": ["dom","es5", "es6"]
+    "lib": [
+      "dom",
+      "es5",
+      "es6"
+    ]
   },
   "exclude": [
     "node_modules"

@@ -1,18 +1,17 @@
-import {Body, Delete, JsonController, Param, Post, Put} from 'routing-controllers';
-import {Service} from 'typedi';
-import {inject} from 'inversify';
-import {TYPES} from '../../types';
+import { Body, Delete, JsonController, Param, Post, Put } from 'routing-controllers';
+import { Service } from 'typedi';
+import { inject } from 'inversify';
+import { TYPES } from '../../types';
 import 'reflect-metadata';
 import IngredientService from '../service/IngredientService';
-import {IngredientRequestDTO} from '../dto/IngredientRequestDTO';
-import {IngredientResponseDTO} from '../dto/IngredientResponseDTO';
-import {DeleteResult} from "typeorm";
+import { IngredientRequestDTO } from '../dto/IngredientRequestDTO';
+import { IngredientResponseDTO } from '../dto/IngredientResponseDTO';
+import { DeleteResult } from 'typeorm';
 
 @Service()
 @JsonController()
 export class IngredientController {
-    constructor(@inject(TYPES.IngredientService) private readonly ingredientService: IngredientService) {
-    }
+    constructor(@inject(TYPES.IngredientService) private readonly ingredientService: IngredientService) {}
 
     @Post('/ingredients')
     async save(@Body() request: IngredientRequestDTO): Promise<IngredientResponseDTO> {
