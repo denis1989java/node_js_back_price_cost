@@ -1,5 +1,6 @@
-import {IngredientResponseDTO} from '../dto/IngredientResponseDTO';
-import {Ingredient} from '../entity/Ingredient';
+import { Measuring } from '../entity/Measuring';
+import { IngredientResponseDTO } from '../dto/IngredientResponseDTO';
+import { Ingredient } from '../entity/Ingredient';
 
 const objectMapper = require('object-mapper');
 
@@ -8,12 +9,12 @@ const ingredientResponseDTO = {
     name: 'name',
     price: 'price',
     quantity: 'quantity',
-    /*  measuring: {
-          key: 'measuring',
-          transform: function(value: number): string {
-              return Measuring[value];
-          },
-      },*/
+    measuring: {
+        key: 'measuring',
+        transform: function(value: number): string {
+            return Measuring[value];
+        },
+    },
     'dish.id': 'dishId',
 };
 
