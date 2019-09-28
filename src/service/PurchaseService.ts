@@ -15,7 +15,7 @@ import { Measuring } from '../entity/Measuring';
 import { CurrencyRepository } from '../repository/CurrencyRepository';
 import { PurchaseUpdateDTO } from '../dto/PurchaseUpdateDTO';
 import UpdateResultUtil from '../util/UpdateResultUtil';
-import { PriceCostException } from '../error/PriceCostException';
+import PriceCostException from '../error/PriceCostException';
 
 @injectable()
 export default class PurchaseService {

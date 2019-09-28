@@ -9,6 +9,7 @@ export enum Messages {
     WRONG_USER_INFO = 'Wrong user info',
     WRONG_PURCHASE = 'Wrong purchase',
     DISH_NOT_EXIST = "Dish doesn't exist",
+    DISH_ALREADY_EXIST = 'Dish already exist',
     WRONG_DISH = 'Wrong dish',
     INGREDIENT_ALREADY_EXIST = 'Ingredient already exist',
     WRONG_INGREDIENT = 'Wrong ingredient',

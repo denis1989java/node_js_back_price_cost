@@ -9,6 +9,10 @@ export class DishRepository extends AbstractRepository<Dish> {
         return this.repository.findOne(id, { relations: ['ingredients'] });
     }
 
+    findByName(name: string): Promise<Dish> {
+        return this.repository.findOne({ name: name });
+    }
+
     save(dish: Dish): Promise<Dish> {
         return this.repository.save(dish);
     }

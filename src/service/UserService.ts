@@ -6,11 +6,8 @@ import { Messages } from '../util/Messages';
 import { fromUserToUserResponseDTO } from '../mapper/UserMapper';
 import { UserResponseDTO } from '../dto/UserResponseDTO';
 import { ForbiddenError } from 'routing-controllers';
-import PasswordUtil from '../util/PasswordUtil';
-import TokenUtil from '../util/TokenUtil';
 import { UserCreateDTO } from '../dto/UserCreateDTO';
 import { DeleteResult } from 'typeorm';
-import { CredentialDTO } from '../dto/CredentialDTO';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
 
@@ -42,20 +39,5 @@ export default class UserService {
         user = await this.userRepository.save(user);
 
         return fromUserToUserResponseDTO(user);
-    }
-
-    public async isCredentialsValid(request: UserCreateDTO): Promise<CredentialDTO> {
-        const persistUser: User = await this.userRepository.findByEmail(request.email);
-
-        if (!persistUser) {
-            throw new ForbiddenError(Messages.CREDENTIALS_INVALID);
-        }
-        if (!(await PasswordUtil.isValidPassword(persistUser.password, request.password))) {
-            throw new ForbiddenError(Messages.CREDENTIALS_INVALID);
-        }
-
-        const token = await TokenUtil.create(persistUser.email);
-
-        return new CredentialDTO(token, persistUser);
     }
 }

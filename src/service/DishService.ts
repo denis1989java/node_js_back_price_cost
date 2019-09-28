@@ -7,7 +7,7 @@ import { DishRepository } from '../repository/DishRepository';
 import { DishCreateDTO } from '../dto/DishCreateDTO';
 import { DishResponseDTO } from '../dto/DishResponseDTO';
 import { UserRepository } from '../repository/UserRepository';
-import { PriceCostException } from '../error/PriceCostException';
+import PriceCostException from '../error/PriceCostException';
 import { Dish } from '../entity/Dish';
 import { fromDishToDishResponseDTO } from '../mapper/DishMapper';
 import { DishUpdateDTO } from '../dto/DishUpdateDTO';
@@ -26,7 +26,12 @@ export default class DishService {
             throw new PriceCostException(500, Messages.USER_NOT_EXIST);
         }
 
-        let dish: Dish = new Dish();
+        let dish: Dish = await this.dishRepository.findByName(request.name);
+        if (dish) {
+            throw new PriceCostException(500, Messages.DISH_ALREADY_EXIST);
+        }
+
+        dish = new Dish();
         dish.name = request.name;
         dish.user = currentUser;
 

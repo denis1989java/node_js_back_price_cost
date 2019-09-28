@@ -1,7 +1,12 @@
 import { CustomError } from 'ts-custom-error';
 
-export class PriceCostException extends CustomError {
-    public constructor(public code: number, message?: string) {
+export default class PriceCostException extends CustomError {
+    status: number;
+    message: string;
+
+    public constructor(status: number, message?: string) {
         super(message);
+        this.status = status;
+        this.message = message;
     }
 }

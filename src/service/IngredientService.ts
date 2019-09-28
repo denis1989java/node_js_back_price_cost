@@ -9,7 +9,7 @@ import { IngredientRequestDTO } from '../dto/IngredientRequestDTO';
 import { IngredientResponseDTO } from '../dto/IngredientResponseDTO';
 import { Purchase } from '../entity/Purchase';
 import { PurchaseRepository } from '../repository/PurchaseRepository';
-import { PriceCostException } from '../error/PriceCostException';
+import PriceCostException from '../error/PriceCostException';
 import { Messages } from '../util/Messages';
 import { Ingredient } from '../entity/Ingredient';
 import { Measuring } from '../entity/Measuring';

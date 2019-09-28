@@ -12,7 +12,8 @@ module.exports = {
         "jasmine": true,
         "jest": true,
         "amd": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "rules": {
         "prettier/prettier": ["error", {"singleQuote": true}],
@@ -48,7 +49,7 @@ module.exports = {
             }
         },
         {
-            "files": ["CommonRequest.ts"],
+            "files": ["CommonRequest.ts", "IntegrationTest.ts"],
             "rules": {
                 "@typescript-eslint/no-explicit-any": "off"
             }

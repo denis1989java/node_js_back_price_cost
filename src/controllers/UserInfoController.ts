@@ -1,4 +1,4 @@
-import { Body, CurrentUser, Get, JsonController, Param, Post, Put } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import UserInfoService from '../service/UserInfoService';
 import { UserInfoCreateDTO } from '../dto/UserInfoCreateDTO';
@@ -18,6 +18,7 @@ export class UserInfoController {
         return this.userInfoService.findOne(id);
     }
 
+    @Authorized()
     @Post('/userInfo')
     save(@Body() request: UserInfoCreateDTO, @CurrentUser() user?: User): Promise<UserInfoResponseDTO> {
         return this.userInfoService.save(request, user);

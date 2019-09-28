@@ -13,7 +13,7 @@ import UpdateResultUtil from '../util/UpdateResultUtil';
 import { UserInfoResponseDTO } from '../dto/UserInfoResponseDTO';
 import { injectable } from 'inversify';
 import { CurrencyRepository } from '../repository/CurrencyRepository';
-import { PriceCostException } from '../error/PriceCostException';
+import PriceCostException from '../error/PriceCostException';
 
 @injectable()
 export default class UserInfoService {
