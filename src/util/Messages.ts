@@ -1,6 +1,6 @@
 export enum Messages {
     USER_ALREADY_EXIST = 'User already exist',
-    USER_NOT_EXIST = "User doesn't exist",
+    USER_NOT_EXIST = 'User does not exist',
     WRONG_PASSWORD = 'Password is wrong',
     CREDENTIALS_INVALID = 'Credentials are invalid',
     WRONG_USER_STATUS = 'Wrong user status',
@@ -8,7 +8,7 @@ export enum Messages {
     ADDRESS_NOT_EXIST = 'Address not exist',
     WRONG_USER_INFO = 'Wrong user info',
     WRONG_PURCHASE = 'Wrong purchase',
-    DISH_NOT_EXIST = "Dish doesn't exist",
+    DISH_NOT_EXIST = 'Dish does not exist',
     DISH_ALREADY_EXIST = 'Dish already exist',
     WRONG_DISH = 'Wrong dish',
     INGREDIENT_ALREADY_EXIST = 'Ingredient already exist',

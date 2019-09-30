@@ -1,4 +1,4 @@
-import { Get, JsonController } from 'routing-controllers';
+import {Authorized, Get, JsonController} from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
 import { TYPES } from '../../types';
@@ -8,6 +8,7 @@ import { CurrencyResponseDTO } from '../dto/CurrencyResponseDTO';
 
 @Service()
 @JsonController()
+@Authorized()
 export class CurrencyController {
     constructor(@inject(TYPES.CurrencyService) private readonly currencyService: CurrencyService) {}
 

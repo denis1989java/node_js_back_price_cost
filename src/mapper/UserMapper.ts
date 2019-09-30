@@ -1,4 +1,3 @@
-import { UserStatus } from '../entity/UserStatus';
 import { User } from '../entity/User';
 import { UserResponseDTO } from '../dto/UserResponseDTO';
 
@@ -7,12 +6,7 @@ const objectMapper = require('object-mapper');
 const userResponseDTO = {
     id: 'id',
     email: 'email',
-    status: {
-        key: 'status',
-        transform: function(value: number): string {
-            return UserStatus[value];
-        },
-    },
+    status: 'status',
     'userInfo.currency': 'currency',
     'userInfo.birthDate': 'birthDate',
     'userInfo.name': 'name',

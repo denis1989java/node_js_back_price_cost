@@ -1,4 +1,4 @@
 export enum UserStatus {
-    REGISTERED,
-    PROFILE_FULLFILLED,
+    REGISTERED = 'Registration complete',
+    PROFILE_FULLFILLED = 'User Information full filled',
 }

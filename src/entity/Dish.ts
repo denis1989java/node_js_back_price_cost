@@ -13,10 +13,14 @@ export class Dish {
     @Column('decimal', { precision: 65, scale: 14, nullable: true, default: 0 })
     amount: number;
 
-    @ManyToOne(() => User, user => user.dishes)
+    @ManyToOne(() => User, user => user.dishes, {
+        onDelete: 'CASCADE',
+    })
     user: User;
 
-    @OneToMany(() => Ingredient, ingredient => ingredient.dish, { onDelete: 'CASCADE' })
+    @OneToMany(() => Ingredient, ingredient => ingredient.dish, {
+        cascade: true,
+    })
     @JoinColumn()
     ingredients: Ingredient[];
 }

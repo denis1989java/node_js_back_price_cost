@@ -16,6 +16,8 @@ export class Purchase {
     @Column()
     measuring: Measuring;
 
-    @ManyToOne(() => User, user => user.purchases)
+    @ManyToOne(() => User, user => user.purchases, {
+        onDelete: 'CASCADE',
+    })
     user: User;
 }

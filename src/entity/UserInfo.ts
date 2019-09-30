@@ -24,7 +24,9 @@ export class UserInfo {
     @Column()
     phone: string;
 
-    @OneToOne(() => User, user => user.userInfo)
+    @OneToOne(() => User, user => user.userInfo, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn()
     user: User;
 

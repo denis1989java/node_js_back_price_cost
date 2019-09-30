@@ -1,4 +1,4 @@
-import { Body, CurrentUser, Delete, JsonController, Param, Post, Put } from 'routing-controllers';
+import {Authorized, Body, CurrentUser, Delete, JsonController, Param, Post, Put} from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
 import { TYPES } from '../../types';
@@ -12,6 +12,7 @@ import { DeleteResult } from 'typeorm';
 
 @Service()
 @JsonController()
+@Authorized()
 export class DishController {
     constructor(@inject(TYPES.DishService) private readonly dishService: DishService) {}
 

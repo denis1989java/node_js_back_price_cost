@@ -1,4 +1,4 @@
-import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
 import { TYPES } from '../../types';
@@ -12,6 +12,7 @@ import { DeleteResult } from 'typeorm';
 
 @Service()
 @JsonController()
+@Authorized()
 export class PurchaseController {
     constructor(@inject(TYPES.PurchaseService) private readonly purchaseService: PurchaseService) {}
 

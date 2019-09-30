@@ -18,6 +18,8 @@ export class Address {
     @Column()
     zip: string;
 
-    @OneToOne(() => UserInfo, userInfo => userInfo.address)
+    @OneToOne(() => UserInfo, userInfo => userInfo.address, {
+        onDelete: 'CASCADE',
+    })
     userInfo: UserInfo;
 }

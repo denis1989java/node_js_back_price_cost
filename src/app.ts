@@ -150,13 +150,17 @@ const dropDB = async (): Promise<void> => {
     logger.info('dropping of DB finished');
 };
 
-const insertCurrencies = async (): Promise<void> => {
-    logger.info('inserting of currencies started');
-    const connection: Connection = await defaultConnection;
-    const queries = fs
+function getCurrenciesQueries(): string[] {
+    return fs
         .readFileSync('currencies.sql')
         .toString()
         .split('\r\n');
+}
+
+const insertCurrencies = async (): Promise<void> => {
+    logger.info('inserting of currencies started');
+    const connection: Connection = await defaultConnection;
+    const queries = getCurrenciesQueries();
     await queries.map(async (query: string) => {
         await connection.query(query);
     });

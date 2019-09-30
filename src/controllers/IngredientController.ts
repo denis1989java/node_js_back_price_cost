@@ -1,4 +1,4 @@
-import { Body, Delete, JsonController, Param, Post, Put } from 'routing-controllers';
+import {Authorized, Body, Delete, Get, JsonController, Param, Post, Put} from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
 import { TYPES } from '../../types';
@@ -10,8 +10,14 @@ import { DeleteResult } from 'typeorm';
 
 @Service()
 @JsonController()
+@Authorized()
 export class IngredientController {
     constructor(@inject(TYPES.IngredientService) private readonly ingredientService: IngredientService) {}
+
+    @Get('/ingredients/:dishId')
+    async get(@Param('dishId') dishId: number): Promise<IngredientResponseDTO[]> {
+        return this.ingredientService.findByDishid(dishId);
+    }
 
     @Post('/ingredients')
     async save(@Body() request: IngredientRequestDTO): Promise<IngredientResponseDTO> {

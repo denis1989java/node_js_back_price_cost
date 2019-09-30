@@ -1,4 +1,4 @@
-import { Delete, Get, JsonController, Param } from 'routing-controllers';
+import { Authorized, Delete, Get, JsonController, Param } from 'routing-controllers';
 import { Service } from 'typedi';
 import UserService from '../service/UserService';
 import { DeleteResult } from 'typeorm';
@@ -9,6 +9,7 @@ import 'reflect-metadata';
 
 @Service()
 @JsonController()
+@Authorized()
 export class UserController {
     constructor(@inject(TYPES.UserService) private readonly userService: UserService) {}
 

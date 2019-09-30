@@ -50,11 +50,6 @@ export default class DishService {
 
         dish = await this.dishRepository.save(dish);
 
-        /* const updateResult = await await this.dishRepository.update(dish);
-        if (!UpdateResultUtil.isSuccess(updateResult)) {
-            throw new PriceCostException(500, Messages.WRONG_DISH);
-        }*/
-
         return fromDishToDishResponseDTO(dish);
     }
 

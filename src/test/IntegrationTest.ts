@@ -1,11 +1,17 @@
 import 'mocha';
 import app from '../app';
 import { Server } from 'http';
+import PriceCostException from '../error/PriceCostException';
+import { Messages } from '../util/Messages';
+import { ForbiddenError } from 'routing-controllers';
+import { UserStatus } from '../entity/UserStatus';
+import { AuthorizationRequiredError } from 'routing-controllers/error/AuthorizationRequiredError';
 
 const chai = require('chai');
 const supertest = require('supertest');
 const http = require('http');
 const assert = chai.assert;
+const HttpStatus = require('http-status-codes');
 
 const server: Server = http.createServer(app.app);
 let request: any;
@@ -42,6 +48,16 @@ const DISH_SALAT = {
 
 const DISH_VEGETABLES = {
     name: 'Vegetables',
+};
+
+const DISH_VEGETABLES_UPDATE = {
+    name: 'Vegetables mix',
+    id: 2,
+};
+
+const WRONG_DISH_VEGETABLES_UPDATE = {
+    name: 'Wrong vegetables mix',
+    id: 3,
 };
 
 const INGREDIENT_POTATOES = {
@@ -89,9 +105,12 @@ const USER_INFO = {
     userId: '1',
 };
 
-const FORBIDDEN_STATUS_CODE = 403;
-const INTERNAL_SERVER_ERROR_CODE = 500;
-const SUCCESS_STATUS_CODE = 200;
+const JSON_WEB_TOKEN_ERROR = 'JsonWebTokenError';
+const JSON_WEB_TOKEN_ERROR_MESSAGE = 'jwt must be provided';
+const AUTHORISATION_REQUIRED_ERROR_MESSAGE = 'Authorization is required for request on POST /userInfo';
+const EXPIRED_AUTHORISATION_TOKEN =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGVuaXMxOTg5QGJrLnJ1IiwiaWF0IjoxNTY5Nzg0Mjg5LCJleHAiOjE1Njk5NTcwODl9.frLwSgNTiS8RS-82MsicB0s9MX1H3d2TdI-ALDzR6cE';
+
 let AUTHORISATION_TOKEN: string;
 let AUTHORISATION_COOKIES: any;
 
@@ -109,10 +128,10 @@ describe('Integration test', async () => {
         request
             .post('/login')
             .send(USER)
-            .expect(FORBIDDEN_STATUS_CODE)
+            .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
-                assert.equal(res.body.name, 'ForbiddenError');
-                assert.equal(res.body.message, 'Credentials are invalid');
+                assert.equal(res.body.name, ForbiddenError.name);
+                assert.equal(res.body.message, Messages.CREDENTIALS_INVALID);
                 done();
             })
             .catch((err: any) => {
@@ -124,11 +143,11 @@ describe('Integration test', async () => {
         request
             .post('/registration')
             .send(USER)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 1);
                 assert.equal(res.body.email, USER.email);
-                assert.equal(res.body.status, 'REGISTERED');
+                assert.equal(res.body.status, UserStatus.REGISTERED);
                 done();
             })
             .catch((err: any) => {
@@ -140,10 +159,10 @@ describe('Integration test', async () => {
         request
             .post('/registration')
             .send(WRONG_PASSWORD_USER)
-            .expect(FORBIDDEN_STATUS_CODE)
+            .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
-                assert.equal(res.body.name, 'ForbiddenError');
-                assert.equal(res.body.message, 'User already exist');
+                assert.equal(res.body.name, ForbiddenError.name);
+                assert.equal(res.body.message, Messages.USER_ALREADY_EXIST);
                 done();
             })
             .catch((err: any) => {
@@ -155,10 +174,10 @@ describe('Integration test', async () => {
         request
             .post('/login')
             .send(WRONG_PASSWORD_USER)
-            .expect(FORBIDDEN_STATUS_CODE)
+            .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
-                assert.equal(res.body.name, 'ForbiddenError');
-                assert.equal(res.body.message, 'Credentials are invalid');
+                assert.equal(res.body.name, ForbiddenError.name);
+                assert.equal(res.body.message, Messages.CREDENTIALS_INVALID);
                 done();
             })
             .catch((err: any) => {
@@ -170,7 +189,7 @@ describe('Integration test', async () => {
         request
             .post('/login')
             .send(USER)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.length, 157);
                 AUTHORISATION_TOKEN = res.body;
@@ -186,10 +205,28 @@ describe('Integration test', async () => {
         request
             .post('/userInfo')
             .send(USER_INFO)
-            .expect(INTERNAL_SERVER_ERROR_CODE)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
             .then((res: any) => {
-                assert.equal(res.body.name, 'JsonWebTokenError');
-                assert.equal(res.body.message, 'jwt must be provided');
+                assert.equal(res.body.name, JSON_WEB_TOKEN_ERROR);
+                assert.equal(res.body.message, JSON_WEB_TOKEN_ERROR_MESSAGE);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('login info: token expired', function(done) {
+        request
+            .post('/userInfo')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', EXPIRED_AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .send(USER_INFO)
+            .expect(HttpStatus.UNAUTHORIZED)
+            .then((res: any) => {
+                assert.equal(res.body.name, AuthorizationRequiredError.name);
+                assert.equal(res.body.message, AUTHORISATION_REQUIRED_ERROR_MESSAGE);
                 done();
             })
             .catch((err: any) => {
@@ -204,7 +241,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(USER_INFO)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 1);
                 assert.equal(res.body.currency.code, USER_INFO.currency);
@@ -232,7 +269,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(PURCHASE_POTATOES)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 1);
                 assert.equal(res.body.name, PURCHASE_POTATOES.name);
@@ -251,7 +288,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(PURCHASE_CARROT)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 2);
                 assert.equal(res.body.name, PURCHASE_CARROT.name);
@@ -270,7 +307,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(DISH_SALAT)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 1);
                 assert.equal(res.body.name, DISH_SALAT.name);
@@ -288,10 +325,10 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(DISH_SALAT)
-            .expect(INTERNAL_SERVER_ERROR_CODE)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
             .then((res: any) => {
-                assert.equal(res.body.name, 'PriceCostException');
-                assert.equal(res.body.message, 'Dish already exist');
+                assert.equal(res.body.name, PriceCostException.name);
+                assert.equal(res.body.message, Messages.DISH_ALREADY_EXIST);
                 done();
             })
             .catch((err: any) => {
@@ -306,7 +343,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(DISH_VEGETABLES)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 2);
                 assert.equal(res.body.name, DISH_VEGETABLES.name);
@@ -324,7 +361,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(INGREDIENT_POTATOES)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 1);
                 assert.equal(res.body.name, INGREDIENT_POTATOES.name);
@@ -345,7 +382,7 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(INGREDIENT_CARROT)
-            .expect(SUCCESS_STATUS_CODE)
+            .expect(HttpStatus.OK)
             .then((res: any) => {
                 assert.equal(res.body.id, 2);
                 assert.equal(res.body.name, INGREDIENT_CARROT.name);
@@ -366,10 +403,10 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(WRONG_DISH_IN_INGREDIENT)
-            .expect(INTERNAL_SERVER_ERROR_CODE)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
             .then((res: any) => {
-                assert.equal(res.body.name, 'PriceCostException');
-                assert.equal(res.body.message, 'Wrong dish');
+                assert.equal(res.body.name, PriceCostException.name);
+                assert.equal(res.body.message, Messages.WRONG_DISH);
                 done();
             })
             .catch((err: any) => {
@@ -384,10 +421,114 @@ describe('Integration test', async () => {
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
             .send(WRONG_PURCHASE_IN_INGREDIENT)
-            .expect(INTERNAL_SERVER_ERROR_CODE)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
             .then((res: any) => {
-                assert.equal(res.body.name, 'PriceCostException');
-                assert.equal(res.body.message, 'Wrong purchase');
+                assert.equal(res.body.name, PriceCostException.name);
+                assert.equal(res.body.message, Messages.WRONG_PURCHASE);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('dish update vegetables: success', function(done) {
+        request
+            .put('/dishes')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .send(DISH_VEGETABLES_UPDATE)
+            .expect(HttpStatus.OK)
+            .then((res: any) => {
+                assert.equal(res.body.id, 2);
+                assert.equal(res.body.name, DISH_VEGETABLES_UPDATE.name);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('dish update vegetables: wrong id', function(done) {
+        request
+            .put('/dishes')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .send(WRONG_DISH_VEGETABLES_UPDATE)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+            .then((res: any) => {
+                assert.equal(res.body.name, PriceCostException.name);
+                assert.equal(res.body.message, Messages.DISH_NOT_EXIST);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('delete ingredient carrot: success', function(done) {
+        request
+            .delete('/ingredients/1')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .expect(HttpStatus.OK)
+            .then((res: any) => {
+                assert.equal(res.body.raw.affectedRows, 1);
+                assert.equal(res.body.affected, 1);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('get ingredients by dishId: success', function(done) {
+        request
+            .get('/ingredients/1')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .expect(HttpStatus.OK)
+            .then((res: any) => {
+                assert.equal(res.body.length, 1);
+                assert.equal(res.body[0].id, 2);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('delete dish salat: success', function(done) {
+        request
+            .delete('/dishes/1')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .expect(HttpStatus.OK)
+            .then((res: any) => {
+                assert.equal(res.body.raw.affectedRows, 1);
+                assert.equal(res.body.affected, 1);
+                done();
+            })
+            .catch((err: any) => {
+                done(err);
+            });
+    });
+
+    it('get ingredients by dishId: success', function(done) {
+        request
+            .get('/ingredients/1')
+            .set('Cookie', AUTHORISATION_COOKIES)
+            .set('Authorization', AUTHORISATION_TOKEN)
+            .set('secret', process.env.LOGIN_SECRET)
+            .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+            .then((res: any) => {
+                assert.equal(res.body.name, PriceCostException.name);
+                assert.equal(res.body.message, Messages.WRONG_DISH);
                 done();
             })
             .catch((err: any) => {

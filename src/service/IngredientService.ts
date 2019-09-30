@@ -26,6 +26,14 @@ export default class IngredientService {
         @InjectRepository(PurchaseRepository) private readonly purchaseRepository: PurchaseRepository,
     ) {}
 
+    public async findByDishid(dishId: number): Promise<IngredientResponseDTO[]> {
+        const dish: Dish = await this.getAndValidateDish(dishId);
+
+        const ingredients: Ingredient[] = await this.ingredientRepository.findByDish(dish);
+
+        return ingredients.map(ingredient => fromIngredientToIngredientResponseDTO(ingredient));
+    }
+
     public async save(request: IngredientRequestDTO): Promise<IngredientResponseDTO> {
         let dish: Dish = await this.getAndValidateDish(request.dishId);
 

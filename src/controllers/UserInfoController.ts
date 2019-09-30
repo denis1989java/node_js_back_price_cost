@@ -10,6 +10,7 @@ import { User } from '../entity/User';
 
 @Service()
 @JsonController()
+@Authorized()
 export class UserInfoController {
     constructor(@inject(TYPES.UserInfoService) private readonly userInfoService: UserInfoService) {}
 
@@ -18,7 +19,6 @@ export class UserInfoController {
         return this.userInfoService.findOne(id);
     }
 
-    @Authorized()
     @Post('/userInfo')
     save(@Body() request: UserInfoCreateDTO, @CurrentUser() user?: User): Promise<UserInfoResponseDTO> {
         return this.userInfoService.save(request, user);
