@@ -1,7 +1,7 @@
-import {Authorized, Get, JsonController} from 'routing-controllers';
+import { Authorized, Get, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 import { CurrencyService } from '../service/CurrencyService';
 import { CurrencyResponseDTO } from '../dto/CurrencyResponseDTO';

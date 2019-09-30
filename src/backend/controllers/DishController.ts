@@ -1,7 +1,7 @@
-import {Authorized, Body, CurrentUser, Delete, JsonController, Param, Post, Put} from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Delete, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 import { User } from '../entity/User';
 import DishService from '../service/DishService';

@@ -1,7 +1,7 @@
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 import PurchaseService from '../service/PurchaseService';
 import { PurchaseResponseDTO } from '../dto/PurchaseResponseDTO';

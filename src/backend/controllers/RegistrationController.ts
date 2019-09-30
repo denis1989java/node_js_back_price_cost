@@ -4,7 +4,7 @@ import UserService from '../service/UserService';
 import { UserResponseDTO } from '../dto/UserResponseDTO';
 import { UserCreateDTO } from '../dto/UserCreateDTO';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 
 @Service()
 @JsonController()

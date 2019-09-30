@@ -5,7 +5,7 @@ import { UserInfoCreateDTO } from '../dto/UserInfoCreateDTO';
 import { UserInfoResponseDTO } from '../dto/UserInfoResponseDTO';
 import { UserInfoUpdateDTO } from '../dto/UserInfoUpdateDTO';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import { User } from '../entity/User';
 
 @Service()

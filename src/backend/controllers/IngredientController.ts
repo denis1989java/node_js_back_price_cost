@@ -1,7 +1,7 @@
-import {Authorized, Body, Delete, Get, JsonController, Param, Post, Put} from 'routing-controllers';
+import { Authorized, Body, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 import IngredientService from '../service/IngredientService';
 import { IngredientRequestDTO } from '../dto/IngredientRequestDTO';

@@ -4,7 +4,7 @@ import AuthenticationService from '../service/AuthenticationService';
 import { UserCreateDTO } from '../dto/UserCreateDTO';
 import { CredentialDTO } from '../dto/CredentialDTO';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 
 @Service()
 @JsonController()

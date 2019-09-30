@@ -2,31 +2,31 @@ import 'reflect-metadata';
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers';
 import { Container } from 'typedi';
 import { Connection, createConnection, getConnection, Repository, useContainer as ormUseContainer } from 'typeorm';
-import { UserController } from './controllers/UserController';
-import { UserInfoController } from './controllers/UserInfoController';
-import { LoginController } from './controllers/LoginController';
-import { RegistrationController } from './controllers/RegistrationController';
+import { UserController } from './backend/controllers/UserController';
+import { UserInfoController } from './backend/controllers/UserInfoController';
+import { LoginController } from './backend/controllers/LoginController';
+import { RegistrationController } from './backend/controllers/RegistrationController';
 import * as express from 'express';
 import * as session from 'express-session';
-import TokenUtil from './util/TokenUtil';
-import DateUtil from './util/DateUtil';
-import { TokenValidationDTO } from './dto/TokenValidationDTO';
-import { Currency } from './entity/Currency';
-import CommonRequest from './repository/CommonRequest';
-import { CurrencyRatesRequestDTO } from './dto/CurrencyRatesRequestDTO';
-import { CurrencyController } from './controllers/CurrencyController';
-import { PurchaseController } from './controllers/PurchaseController';
-import { MeasuringController } from './controllers/MeasuringController';
-import { DishController } from './controllers/DishController';
-import { IngredientController } from './controllers/IngredientController';
-import { User } from './entity/User';
-import { Address } from './entity/Address';
-import { Dish } from './entity/Dish';
-import { Ingredient } from './entity/Ingredient';
-import { Purchase } from './entity/Purchase';
-import { UserInfo } from './entity/UserInfo';
+import TokenUtil from './backend/util/TokenUtil';
+import DateUtil from './backend/util/DateUtil';
+import { TokenValidationDTO } from './backend/dto/TokenValidationDTO';
+import { Currency } from './backend/entity/Currency';
+import CommonRequest from './backend/repository/CommonRequest';
+import { CurrencyRatesRequestDTO } from './backend/dto/CurrencyRatesRequestDTO';
+import { CurrencyController } from './backend/controllers/CurrencyController';
+import { PurchaseController } from './backend/controllers/PurchaseController';
+import { MeasuringController } from './backend/controllers/MeasuringController';
+import { DishController } from './backend/controllers/DishController';
+import { IngredientController } from './backend/controllers/IngredientController';
+import { User } from './backend/entity/User';
+import { Address } from './backend/entity/Address';
+import { Dish } from './backend/entity/Dish';
+import { Ingredient } from './backend/entity/Ingredient';
+import { Purchase } from './backend/entity/Purchase';
+import { UserInfo } from './backend/entity/UserInfo';
 import { format } from 'winston';
-import errorMiddleware from './middleware/error.middleware';
+import errorMiddleware from './backend/middleware/error.middleware';
 
 require('dotenv').config();
 const bodyParser = require('body-parser');
@@ -43,8 +43,8 @@ const logger = winston.createLogger({
     ),
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log', level: 'info' }),
+        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'logs/combined.log', level: 'info' }),
     ],
 });
 
@@ -61,8 +61,6 @@ const defaultConnection = createConnection({
     database: 'test',
     synchronize: true,
     entities: [User, Address, Currency, Dish, Ingredient, Purchase, UserInfo],
-    logging: true,
-    logger: 'file',
 });
 
 const app = express();

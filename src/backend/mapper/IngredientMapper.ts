@@ -11,8 +11,8 @@ const ingredientResponseDTO = {
     quantity: 'quantity',
     measuring: {
         key: 'measuring',
-        transform: function(value: number): string {
-            return Measuring[value];
+        transform: function(value: string): string {
+            return value as Measuring;
         },
     },
     'dish.id': 'dishId',

@@ -10,8 +10,8 @@ const purchaseResponseDTO = {
     price: 'price',
     measuring: {
         key: 'measuring',
-        transform: function(value: number): string {
-            return Measuring[value];
+        transform: function(value: string): string {
+            return value as Measuring;
         },
     },
 };

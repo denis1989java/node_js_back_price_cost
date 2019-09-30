@@ -4,7 +4,7 @@ import UserService from '../service/UserService';
 import { DeleteResult } from 'typeorm';
 import { UserResponseDTO } from '../dto/UserResponseDTO';
 import { inject } from 'inversify';
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 
 @Service()
