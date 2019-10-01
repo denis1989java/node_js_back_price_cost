@@ -7,7 +7,7 @@ import { CurrencyService } from '../service/CurrencyService';
 import { CurrencyResponseDTO } from '../dto/CurrencyResponseDTO';
 
 @Service()
-@JsonController()
+@JsonController("/api")
 @Authorized()
 export class CurrencyController {
     constructor(@inject(TYPES.CurrencyService) private readonly currencyService: CurrencyService) {}

@@ -32,6 +32,7 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const cron = require('node-cron');
+const path = require('path');
 const winston = require('winston');
 const logger = winston.createLogger({
     level: 'info',
@@ -66,6 +67,7 @@ const defaultConnection = createConnection({
 const app = express();
 
 app.use(session({ secret: process.env.LOGIN_SECRET, saveUninitialized: true, resave: true }));
+app.use('/build', express.static('build'));
 
 app.use(
     bodyParser.urlencoded({
@@ -73,6 +75,10 @@ app.use(
     }),
 );
 app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/price_cost.html'));
+});
 
 useExpressServer(app, {
     controllers: [

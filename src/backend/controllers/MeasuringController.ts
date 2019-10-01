@@ -5,7 +5,7 @@ import { Measuring } from '../entity/Measuring';
 import { MeasuringResponseDTO } from '../dto/MeasuringResponseDTO';
 
 @Service()
-@JsonController()
+@JsonController("/api")
 @Authorized()
 export class MeasuringController {
     @Get('/measuring')

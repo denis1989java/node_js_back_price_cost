@@ -9,7 +9,7 @@ import { IngredientResponseDTO } from '../dto/IngredientResponseDTO';
 import { DeleteResult } from 'typeorm';
 
 @Service()
-@JsonController()
+@JsonController("/api")
 @Authorized()
 export class IngredientController {
     constructor(@inject(TYPES.IngredientService) private readonly ingredientService: IngredientService) {}

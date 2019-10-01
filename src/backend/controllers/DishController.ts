@@ -11,7 +11,7 @@ import { DishUpdateDTO } from '../dto/DishUpdateDTO';
 import { DeleteResult } from 'typeorm';
 
 @Service()
-@JsonController()
+@JsonController("/api")
 @Authorized()
 export class DishController {
     constructor(@inject(TYPES.DishService) private readonly dishService: DishService) {}

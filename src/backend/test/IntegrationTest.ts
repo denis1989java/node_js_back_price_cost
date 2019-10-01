@@ -107,7 +107,7 @@ const USER_INFO = {
 
 const JSON_WEB_TOKEN_ERROR = 'JsonWebTokenError';
 const JSON_WEB_TOKEN_ERROR_MESSAGE = 'jwt must be provided';
-const AUTHORISATION_REQUIRED_ERROR_MESSAGE = 'Authorization is required for request on POST /userInfo';
+const AUTHORISATION_REQUIRED_ERROR_MESSAGE = 'Authorization is required for request on POST /api/userInfo';
 const EXPIRED_AUTHORISATION_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGVuaXMxOTg5QGJrLnJ1IiwiaWF0IjoxNTY5Nzg0Mjg5LCJleHAiOjE1Njk5NTcwODl9.frLwSgNTiS8RS-82MsicB0s9MX1H3d2TdI-ALDzR6cE';
 
@@ -126,7 +126,7 @@ describe('Integration test', async () => {
 
     it('login: user not exist', function(done) {
         request
-            .post('/login')
+            .post('/api/login')
             .send(USER)
             .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
@@ -141,7 +141,7 @@ describe('Integration test', async () => {
 
     it('registration: success', function(done) {
         request
-            .post('/registration')
+            .post('/api/registration')
             .send(USER)
             .expect(HttpStatus.OK)
             .then((res: any) => {
@@ -157,7 +157,7 @@ describe('Integration test', async () => {
 
     it('registration: user already exist', function(done) {
         request
-            .post('/registration')
+            .post('/api/registration')
             .send(WRONG_PASSWORD_USER)
             .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
@@ -172,7 +172,7 @@ describe('Integration test', async () => {
 
     it('login: password is wrong', function(done) {
         request
-            .post('/login')
+            .post('/api/login')
             .send(WRONG_PASSWORD_USER)
             .expect(HttpStatus.FORBIDDEN)
             .then((res: any) => {
@@ -187,7 +187,7 @@ describe('Integration test', async () => {
 
     it('login: success', function(done) {
         request
-            .post('/login')
+            .post('/api/login')
             .send(USER)
             .expect(HttpStatus.OK)
             .then((res: any) => {
@@ -203,7 +203,7 @@ describe('Integration test', async () => {
 
     it('login info: unauthorised', function(done) {
         request
-            .post('/userInfo')
+            .post('/api/userInfo')
             .send(USER_INFO)
             .expect(HttpStatus.INTERNAL_SERVER_ERROR)
             .then((res: any) => {
@@ -218,7 +218,7 @@ describe('Integration test', async () => {
 
     it('login info: token expired', function(done) {
         request
-            .post('/userInfo')
+            .post('/api/userInfo')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', EXPIRED_AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -236,7 +236,7 @@ describe('Integration test', async () => {
 
     it('login info: success', function(done) {
         request
-            .post('/userInfo')
+            .post('/api/userInfo')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -264,7 +264,7 @@ describe('Integration test', async () => {
 
     it('purchase potatoes: success', function(done) {
         request
-            .post('/purchases')
+            .post('/api/purchases')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -283,7 +283,7 @@ describe('Integration test', async () => {
 
     it('purchase carrot: success', function(done) {
         request
-            .post('/purchases')
+            .post('/api/purchases')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -302,7 +302,7 @@ describe('Integration test', async () => {
 
     it('dish salat: success', function(done) {
         request
-            .post('/dishes')
+            .post('/api/dishes')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -320,7 +320,7 @@ describe('Integration test', async () => {
 
     it('dish salat: dish already exist', function(done) {
         request
-            .post('/dishes')
+            .post('/api/dishes')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -338,7 +338,7 @@ describe('Integration test', async () => {
 
     it('dish vegetables: success', function(done) {
         request
-            .post('/dishes')
+            .post('/api/dishes')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -356,7 +356,7 @@ describe('Integration test', async () => {
 
     it('ingredient potatoes: success', function(done) {
         request
-            .post('/ingredients')
+            .post('/api/ingredients')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -377,7 +377,7 @@ describe('Integration test', async () => {
 
     it('ingredient carrot: success', function(done) {
         request
-            .post('/ingredients')
+            .post('/api/ingredients')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -398,7 +398,7 @@ describe('Integration test', async () => {
 
     it('ingredient: wrong dish', function(done) {
         request
-            .post('/ingredients')
+            .post('/api/ingredients')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -416,7 +416,7 @@ describe('Integration test', async () => {
 
     it('ingredient: wrong purchase', function(done) {
         request
-            .post('/ingredients')
+            .post('/api/ingredients')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -434,7 +434,7 @@ describe('Integration test', async () => {
 
     it('dish update vegetables: success', function(done) {
         request
-            .put('/dishes')
+            .put('/api/dishes')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -452,7 +452,7 @@ describe('Integration test', async () => {
 
     it('dish update vegetables: wrong id', function(done) {
         request
-            .put('/dishes')
+            .put('/api/dishes')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -470,7 +470,7 @@ describe('Integration test', async () => {
 
     it('delete ingredient carrot: success', function(done) {
         request
-            .delete('/ingredients/1')
+            .delete('/api/ingredients/1')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -487,7 +487,7 @@ describe('Integration test', async () => {
 
     it('get ingredients by dishId: success', function(done) {
         request
-            .get('/ingredients/1')
+            .get('/api/ingredients/1')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -504,7 +504,7 @@ describe('Integration test', async () => {
 
     it('delete dish salat: success', function(done) {
         request
-            .delete('/dishes/1')
+            .delete('/api/dishes/1')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
@@ -521,7 +521,7 @@ describe('Integration test', async () => {
 
     it('get ingredients by dishId: success', function(done) {
         request
-            .get('/ingredients/1')
+            .get('/api/ingredients/1')
             .set('Cookie', AUTHORISATION_COOKIES)
             .set('Authorization', AUTHORISATION_TOKEN)
             .set('secret', process.env.LOGIN_SECRET)
