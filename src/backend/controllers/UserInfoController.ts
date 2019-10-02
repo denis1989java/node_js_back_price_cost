@@ -9,7 +9,7 @@ import { TYPES } from '../types';
 import { User } from '../entity/User';
 
 @Service()
-@JsonController("/api")
+@JsonController('/api')
 @Authorized()
 export class UserInfoController {
     constructor(@inject(TYPES.UserInfoService) private readonly userInfoService: UserInfoService) {}

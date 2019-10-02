@@ -7,7 +7,7 @@ import { inject } from 'inversify';
 import { TYPES } from '../types';
 
 @Service()
-@JsonController("/api")
+@JsonController('/api')
 export class LoginController {
     constructor(@inject(TYPES.AuthenticationService) private readonly authenticationService: AuthenticationService) {}
 

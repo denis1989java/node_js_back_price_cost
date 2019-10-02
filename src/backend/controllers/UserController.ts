@@ -8,7 +8,7 @@ import { TYPES } from '../types';
 import 'reflect-metadata';
 
 @Service()
-@JsonController("/api")
+@JsonController('/api')
 @Authorized()
 export class UserController {
     constructor(@inject(TYPES.UserService) private readonly userService: UserService) {}

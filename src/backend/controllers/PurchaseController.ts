@@ -11,7 +11,7 @@ import { PurchaseUpdateDTO } from '../dto/PurchaseUpdateDTO';
 import { DeleteResult } from 'typeorm';
 
 @Service()
-@JsonController("/api")
+@JsonController('/api')
 @Authorized()
 export class PurchaseController {
     constructor(@inject(TYPES.PurchaseService) private readonly purchaseService: PurchaseService) {}
